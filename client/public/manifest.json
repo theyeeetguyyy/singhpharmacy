@@ -1,0 +1,25 @@
+{
+  "name": "AdGen Pharmacy ERP",
+  "short_name": "AdGen ERP",
+  "description": "Pharmacy billing, FEFO batch inventory and GST compliance",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#f3f8f6",
+  "theme_color": "#059669",
+  "icons": [
+    {
+      "src": "/logo-nobg.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/logo-nobg.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ]
+}

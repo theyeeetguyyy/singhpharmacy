@@ -1,0 +1,220 @@
+import { Router, Response } from 'express';
+import { prisma } from '../config/prisma';
+import { authenticate, AuthenticatedRequest, requireOwner } from '../middlewares/auth.middleware';
+
+const router = Router();
+
+// Helper function to calculate medical search relevance score
+function calculateSearchRelevance(product: any, query: string): number {
+  if (!query) return 0;
+  const q = query.toLowerCase().trim();
+  const name = (product.name || '').toLowerCase();
+  const generic = (product.genericName || '').toLowerCase();
+  const company = (product.companyName || '').toLowerCase();
+
+  // 1. Name starts directly with search query (Highest priority) -> 100 points
+  if (name.startsWith(q)) return 100;
+
+  // 2. A word inside product name starts with query -> 80 points
+  const words = name.split(/\s+/);
+  if (words.some((w: string) => w.startsWith(q))) return 80;
+
+  // 3. Generic name or company starts with query -> 60 points
+  if (generic.startsWith(q) || company.startsWith(q)) return 60;
+
+  // 4. Name contains query as a substring -> 40 points
+  if (name.includes(q)) return 40;
+
+  // 5. Generic or company contains query as a substring -> 20 points
+  if (generic.includes(q) || company.includes(q)) return 20;
+
+  return 0;
+}
+
+// GET /api/products — Fetch active products with server-side query search (q) & pagination limits
+router.get('/', authenticate, async (req: AuthenticatedRequest, res: Response) => {
+  try {
+    const { q, limit } = req.query;
+    const searchStr = typeof q === 'string' ? q.trim() : '';
+
+    /*
+     * `?includeInactive=1` returns removed medicines as well.
+     *
+     * Removing a medicine is a soft delete, but nothing could ever read the removed rows back, so
+     * from inside the app it was permanent: a mis-click took a medicine out of the catalogue,
+     * search and billing with no way to undo it. The Products screen uses this to list them and
+     * put one back. Every other caller — billing, purchase entry, returns — omits it and keeps
+     * seeing only what is actually sellable.
+     */
+    const includeInactive = req.query.includeInactive === '1' || req.query.includeInactive === 'true';
+
+    const whereClause: any = includeInactive ? {} : { isActive: true };
+    if (searchStr) {
+      whereClause.OR = [
+        { name: { contains: searchStr, mode: 'insensitive' } },
+        { genericName: { contains: searchStr, mode: 'insensitive' } },
+        { companyName: { contains: searchStr, mode: 'insensitive' } },
+      ];
+    }
+
+    let products = await prisma.product.findMany({
+      where: whereClause,
+      take: limit ? parseInt(limit as string) : 5000,
+      include: {
+        batches: {
+          orderBy: { createdAt: 'desc' },
+          take: 1,
+        },
+      },
+    });
+
+    // If query string exists, sort by smart medical relevance score (descending) then by name (ascending)
+    if (searchStr) {
+      products = products.sort((a, b) => {
+        const scoreA = calculateSearchRelevance(a, searchStr);
+        const scoreB = calculateSearchRelevance(b, searchStr);
+        if (scoreB !== scoreA) {
+          return scoreB - scoreA; // Highest relevance score first
+        }
+        return a.name.localeCompare(b.name);
+      });
+    } else {
+      products = products.sort((a, b) => a.name.localeCompare(b.name));
+    }
+
+    res.json(products);
+  } catch (e: any) {
+    res.status(500).json({ error: e.message });
+  }
+});
+
+// POST /api/products — Create a new product
+router.post('/', authenticate, async (req: AuthenticatedRequest, res: Response) => {
+  try {
+    const {
+      name,
+      genericName,
+      companyName,
+      hsnCode,
+      gstPercent,
+      productType,
+      division,
+      packSize,
+      packUnit,
+      contentUnit,
+      requiresColdStorage,
+      lowStockThreshold,
+      mrp,
+      purchaseRate,
+    } = req.body;
+
+    const product = await prisma.product.create({
+      data: {
+        name,
+        genericName,
+        companyName,
+        hsnCode,
+        gstPercent: parseFloat(gstPercent ?? 12),
+        productType,
+        division,
+        packSize: parseInt(packSize ?? 1),
+        packUnit: packUnit || 'Strip',
+        contentUnit: contentUnit || 'Tablet',
+        requiresColdStorage: Boolean(requiresColdStorage),
+        lowStockThreshold: parseFloat(lowStockThreshold ?? 1),
+        // Previously dropped on create (only PUT handled them), so a new medicine always
+        // started at ₹0 and prefilled nothing when it was later added to a purchase bill.
+        mrp: parseFloat(mrp ?? 0) || 0,
+        purchaseRate: parseFloat(purchaseRate ?? 0) || 0,
+      },
+    });
+
+    res.status(201).json(product);
+  } catch (e: any) {
+    res.status(400).json({ error: e.message });
+  }
+});
+
+// PUT /api/products/:id — Update a product with clean field casting
+router.put('/:id', authenticate, async (req: AuthenticatedRequest, res: Response) => {
+  try {
+    const { id } = req.params;
+    const {
+      name, genericName, companyName, hsnCode, gstPercent, productType,
+      division, packSize, packUnit, contentUnit, requiresColdStorage,
+      lowStockThreshold, mrp, purchaseRate, isActive
+    } = req.body;
+
+    const dataToUpdate: any = {};
+    if (name !== undefined) dataToUpdate.name = name;
+    if (genericName !== undefined) dataToUpdate.genericName = genericName;
+    if (companyName !== undefined) dataToUpdate.companyName = companyName;
+    if (hsnCode !== undefined) dataToUpdate.hsnCode = hsnCode;
+    if (gstPercent !== undefined) dataToUpdate.gstPercent = parseFloat(gstPercent);
+    if (productType !== undefined) dataToUpdate.productType = productType;
+    if (division !== undefined) dataToUpdate.division = division;
+    if (packSize !== undefined) dataToUpdate.packSize = parseInt(packSize, 10);
+    if (packUnit !== undefined) dataToUpdate.packUnit = packUnit;
+    if (contentUnit !== undefined) dataToUpdate.contentUnit = contentUnit;
+    if (requiresColdStorage !== undefined) dataToUpdate.requiresColdStorage = Boolean(requiresColdStorage);
+    if (lowStockThreshold !== undefined) dataToUpdate.lowStockThreshold = parseFloat(lowStockThreshold);
+    if (mrp !== undefined) dataToUpdate.mrp = parseFloat(mrp);
+    if (purchaseRate !== undefined) dataToUpdate.purchaseRate = parseFloat(purchaseRate);
+    if (isActive !== undefined) dataToUpdate.isActive = Boolean(isActive);
+
+    const updated = await prisma.product.update({
+      where: { id },
+      data: dataToUpdate,
+    });
+
+    res.json(updated);
+  } catch (e: any) {
+    res.status(400).json({ error: e.message });
+  }
+});
+
+/**
+ * DELETE /api/products/:id — Soft-delete product.
+ *
+ * The row survives so existing bills keep their medicine, but GET /products filters on
+ * `isActive` and no screen lists the inactive ones — so this is one-way from inside the app.
+ *
+ * That made it dangerous on a medicine that still has stock: the batches stay in the database
+ * with quantity on them while the medicine disappears from the catalogue, from search and from
+ * the till, and there is no way to bring it back or sell it. Stock on hand is therefore refused,
+ * with the quantity named so the operator knows what to do about it first.
+ */
+router.delete('/:id', authenticate, requireOwner, async (req: AuthenticatedRequest, res: Response) => {
+  try {
+    const { id } = req.params;
+
+    const product = await prisma.product.findUnique({
+      where: { id },
+      select: { name: true, contentUnit: true },
+    });
+    if (!product) return res.status(404).json({ error: 'Medicine not found' });
+
+    const onHand = await prisma.inventoryBatch.aggregate({
+      where: { productId: id, quantity: { gt: 0 } },
+      _sum: { quantity: true },
+    });
+    const stock = onHand._sum.quantity || 0;
+
+    if (stock > 0) {
+      return res.status(409).json({
+        error:
+          `${product.name} still has ${stock} ${product.contentUnit || 'unit'}(s) in stock. ` +
+          `Removing it now would hide that stock from the catalogue and the billing counter with no ` +
+          `way to sell it. Clear the stock first — sell it, return it to the supplier, or write it ` +
+          `off from Stock Adjustments.`,
+      });
+    }
+
+    await prisma.product.update({ where: { id }, data: { isActive: false } });
+    res.json({ message: 'Medicine removed from the catalogue' });
+  } catch (e: any) {
+    res.status(400).json({ error: e.message });
+  }
+});
+
+export default router;
