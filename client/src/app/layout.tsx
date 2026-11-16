@@ -22,11 +22,11 @@ const jetbrains = JetBrains_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "AdGen Pharmacy ERP | Clinical Billing & Inventory Suite",
-  description: "Enterprise Pharmacy Management System — Billing, FEFO Batch Inventory, GST Compliance",
-  applicationName: "AdGen ERP",
+  title: "Shri Singaji Mediclinic ERP | Clinical Billing & Inventory Suite",
+  description: "Enterprise Clinic & Pharmacy Management System — Billing, FEFO Batch Inventory, GST Compliance",
+  applicationName: "Singaji ERP",
   manifest: "/manifest.json",
-  appleWebApp: { capable: true, title: "AdGen ERP", statusBarStyle: "default" },
+  appleWebApp: { capable: true, title: "Singaji ERP", statusBarStyle: "default" },
   formatDetection: { telephone: false },
   icons: {
     icon: "/logo-nobg.png",

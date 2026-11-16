@@ -1,7 +1,7 @@
 {
-  "name": "AdGen Pharmacy ERP",
-  "short_name": "AdGen ERP",
-  "description": "Pharmacy billing, FEFO batch inventory and GST compliance",
+  "name": "Shri Singaji Mediclinic ERP",
+  "short_name": "Singaji ERP",
+  "description": "Pharmacy & Clinic billing, FEFO batch inventory and GST compliance",
   "start_url": "/",
   "scope": "/",
   "display": "standalone",

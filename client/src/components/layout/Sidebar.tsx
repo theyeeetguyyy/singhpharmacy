@@ -85,7 +85,7 @@ export default function Sidebar() {
             <Image src="/logo.png" alt="" width={32} height={32} className="h-8 w-8 object-contain" />
             <span className="min-w-0">
               <span className="block font-extrabold text-fg text-[15px] tracking-tight leading-none">
-                AdGen <span className="text-brand font-mono text-xs ml-0.5">ERP</span>
+                Singaji <span className="text-brand font-mono text-xs ml-0.5">ERP</span>
               </span>
               <span className="block text-[10px] text-fg-subtle font-semibold tracking-wider uppercase mt-1 leading-none">
                 Clinical &amp; POS Suite

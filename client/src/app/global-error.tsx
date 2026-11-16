@@ -45,7 +45,7 @@ export default function GlobalError({
           }}
         >
           <h1 style={{ fontSize: '1.125rem', fontWeight: 700, margin: 0 }}>
-            AdGen ERP could not start
+            Singaji ERP could not start
           </h1>
           <p style={{ marginTop: '0.5rem', fontSize: '0.875rem', color: '#475569' }}>
             The application failed to load. Your data has not been changed.

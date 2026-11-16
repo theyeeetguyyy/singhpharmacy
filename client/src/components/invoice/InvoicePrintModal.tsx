@@ -74,7 +74,7 @@ export default function InvoicePrintModal({ invoice, bill, onClose }: InvoicePri
     const originalTitle = document.title;
     const invNum = activeInvoice.invoiceNumber || activeInvoice.id || 'Draft';
     const patientName = (activeInvoice.customerName || activeInvoice.customer?.name || 'Patient').replace(/[^a-zA-Z0-9_-]/g, '_');
-    const shopSlug = (profile?.name || 'AdGen Pharma').replace(/[^a-zA-Z0-9_-]/g, '_');
+    const shopSlug = (profile?.name || 'Shri Singaji mediclinic').replace(/[^a-zA-Z0-9_-]/g, '_');
     document.title = `${gstRegistered ? 'Tax_Invoice' : 'Bill'}_${invNum}_${patientName}_${shopSlug}`;
     window.print();
     setTimeout(() => {
@@ -86,7 +86,7 @@ export default function InvoicePrintModal({ invoice, bill, onClose }: InvoicePri
     // Shop name comes from the profile rather than a literal, so a rename in Admin reaches the
     // shared message too instead of leaving "ADGEN PHARMACY" behind on every WhatsApp bill.
     const patient = activeInvoice.customerName || activeInvoice.customer?.name || 'Patient';
-    const shopName = (profile?.name || 'AdGen Pharma') + (profile?.tagline ? ` - ${profile.tagline}` : '');
+    const shopName = (profile?.name || 'Shri Singaji mediclinic') + (profile?.tagline ? ` - ${profile.tagline}` : '');
     const text = `*${shopName.toUpperCase()}*\n----------------------------\nBill #: ${activeInvoice.invoiceNumber}\nDate: ${formatDate(activeInvoice.createdAt)}\nPatient: ${patient}\nContact: ${activeInvoice.customerPhone || activeInvoice.customer?.phone || '-'}\nDr. Name: ${activeInvoice.doctorName || '-'}\n----------------------------\n*Net Amount: ₹${activeInvoice.grandTotal?.toFixed(2)}*\nPayment: ${activeInvoice.paymentMethod || 'CASH'}\n----------------------------\nWell wishing, ${shopName}`;
     
     if (navigator.share) {
@@ -207,13 +207,13 @@ export default function InvoicePrintModal({ invoice, bill, onClose }: InvoicePri
           {/* Header */}
           <div className="flex justify-between items-start border-b-2 border-slate-900 pb-4 mb-4">
             <div className="flex items-start gap-3">
-              <img src="/logo.png" alt="AdGen Pharma" className="h-12 w-auto object-contain shrink-0" />
+              <img src="/logo.png" alt="Shri Singaji mediclinic" className="h-12 w-auto object-contain shrink-0" />
               <div>
                 <h1 className="text-xl font-black text-slate-900 tracking-tight leading-none">
-                  {profile?.name || 'ADGEN PHARMA'}
+                  {profile?.name || 'SHRI SINGAJI MEDICLINIC'}
                 </h1>
                 <p className="text-[10px] text-slate-600 font-bold uppercase tracking-wider mt-1">
-                  {profile?.tagline || 'RETAIL PHARMACY & CLINICAL SUPPLIES'}
+                  {profile?.tagline || 'CLINIC & PHARMACY'}
                 </p>
                 <div className="text-[10px] text-slate-600 font-medium mt-1 leading-tight">
                   {formatPharmacyAddress(profile) || '—'}<br />
@@ -477,7 +477,7 @@ export default function InvoicePrintModal({ invoice, bill, onClose }: InvoicePri
                 <div className={paper.compact ? 'hidden' : 'pt-2'}>
                   <UpiQr
                     upiId={UPI_ID}
-                    payeeName={profile?.name || 'AdGen Pharmacy'}
+                    payeeName={profile?.name || 'Shri Singaji mediclinic'}
                     amount={netPayableVal}
                     note={`Bill ${activeInvoice.invoiceNumber || ''}`.trim()}
                   />
@@ -490,7 +490,7 @@ export default function InvoicePrintModal({ invoice, bill, onClose }: InvoicePri
                 signs a counter memo, so it printed an empty line on every bill.
               */}
               <div className="pt-2 text-center text-[11px] font-bold text-slate-700">
-                Well wishing, {profile?.name || 'AdGen Pharma'}
+                Well wishing, {profile?.name || 'Shri Singaji mediclinic'}
                 {profile?.tagline ? ` - ${profile.tagline}` : ''}
               </div>
             </div>

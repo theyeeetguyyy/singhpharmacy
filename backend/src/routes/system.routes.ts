@@ -24,9 +24,9 @@ router.get('/check-update', authenticate, async (req: AuthenticatedRequest, res:
       const localHash = stdout.trim();
 
       try {
-        // 2. Fetch latest commit from GitHub API for adgenpharmacy/adgen-erp
-        const githubRes = await fetch('https://api.github.com/repos/adgenpharmacy/adgen-erp/commits/main', {
-          headers: { 'User-Agent': 'AdGen-ERP-App' },
+        // 2. Fetch latest commit from GitHub API for theyeeetguyyy/singhpharmacy
+        const githubRes = await fetch('https://api.github.com/repos/theyeeetguyyy/singhpharmacy/commits/main', {
+          headers: { 'User-Agent': 'Singaji-ERP-App' },
         });
 
         if (!githubRes.ok) {
@@ -95,7 +95,7 @@ router.get('/export-data', authenticate, requireOwner, async (req: Authenticated
     const exportPayload = {
       exportedAt: new Date().toISOString(),
       exportedBy: req.user?.email || 'Authenticated User',
-      system: 'AdGen Pharmacy ERP Engine',
+      system: 'Shri Singaji Mediclinic ERP Engine',
       version: '1.0.0',
       recordCounts: {
         parties: parties.length,
@@ -117,7 +117,7 @@ router.get('/export-data', authenticate, requireOwner, async (req: Authenticated
       },
     };
 
-    const fileName = `AdGen_Pharmacy_Backup_${new Date().toISOString().slice(0, 10)}.json`;
+    const fileName = `Singaji_Mediclinic_Backup_${new Date().toISOString().slice(0, 10)}.json`;
     res.setHeader('Content-Type', 'application/json');
     res.setHeader('Content-Disposition', `attachment; filename="${fileName}"`);
     res.send(JSON.stringify(exportPayload, null, 2));

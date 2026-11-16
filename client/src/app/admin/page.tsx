@@ -128,17 +128,17 @@ export default function AdminPage() {
                 <Input
                   value={form.name}
                   onChange={(e) => set('name', e.target.value)}
-                  placeholder="AdGen Pharma"
+                  placeholder="Shri Singaji mediclinic"
                   className="font-semibold"
                   required
                 />
               </Field>
 
-              <Field label="Tagline" hint="Small line under the name, e.g. 'Retail Pharmacy & Clinical Supplies'">
+              <Field label="Tagline" hint="Small line under the name, e.g. 'Clinic & Pharmacy'">
                 <Input
                   value={form.tagline ?? ''}
                   onChange={(e) => set('tagline', e.target.value)}
-                  placeholder="Retail Pharmacy & Clinical Supplies"
+                  placeholder="Clinic & Pharmacy"
                 />
               </Field>
 
@@ -146,7 +146,7 @@ export default function AdminPage() {
                 <Input
                   value={form.addressLine ?? ''}
                   onChange={(e) => set('addressLine', e.target.value)}
-                  placeholder="27-A Chandra Nagar, Barfani Dham, MR-9"
+                  placeholder="78, Main Rd, Sector A, Slice 2, Aranya Nagar, Scheme 78, Vijay Nagar"
                 />
               </Field>
 
@@ -155,13 +155,13 @@ export default function AdminPage() {
                   <Input value={form.city ?? ''} onChange={(e) => set('city', e.target.value)} placeholder="Indore" />
                 </Field>
                 <Field label="State">
-                  <Input value={form.state ?? ''} onChange={(e) => set('state', e.target.value)} placeholder="M.P" />
+                  <Input value={form.state ?? ''} onChange={(e) => set('state', e.target.value)} placeholder="Madhya Pradesh" />
                 </Field>
                 <Field label="Pincode">
                   <Input
                     value={form.pincode ?? ''}
                     onChange={(e) => set('pincode', e.target.value)}
-                    placeholder="452001"
+                    placeholder="452010"
                     className="font-mono"
                   />
                 </Field>
@@ -172,7 +172,7 @@ export default function AdminPage() {
                   <Input
                     value={form.phone ?? ''}
                     onChange={(e) => set('phone', e.target.value)}
-                    placeholder="+91 88396 40968"
+                    placeholder="098262 68222"
                     className="font-mono"
                   />
                 </Field>
@@ -181,7 +181,7 @@ export default function AdminPage() {
                     type="email"
                     value={form.email ?? ''}
                     onChange={(e) => set('email', e.target.value)}
-                    placeholder="adgenpharmacy2024@gmail.com"
+                    placeholder="singajimediclinic@gmail.com"
                   />
                 </Field>
               </div>
@@ -220,7 +220,7 @@ export default function AdminPage() {
                   rows={2}
                   value={form.invoiceFooter ?? ''}
                   onChange={(e) => set('invoiceFooter', e.target.value)}
-                  placeholder="Thank you for choosing AdGen Pharmacy!"
+                  placeholder="Thank you for choosing Shri Singaji mediclinic!"
                 />
               </Field>
             </CardBody>

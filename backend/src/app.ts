@@ -129,7 +129,7 @@ app.use('/api/attendance', attendanceRoutes);
 app.get(['/', '/api'], (req, res) => {
   res.json({
     status: 'online',
-    service: 'AdGen Pharmacy ERP API Server',
+    service: 'Shri Singaji Mediclinic ERP API Server',
     endpoints: {
       health: '/health',
       products: '/api/products',

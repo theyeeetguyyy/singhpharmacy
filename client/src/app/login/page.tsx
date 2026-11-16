@@ -108,9 +108,9 @@ export default function LoginPage() {
         <div className="mx-auto flex max-w-6xl items-center gap-3 px-6 py-4">
           <Image src="/logo.png" alt="" width={36} height={36} className="h-9 w-9 object-contain" />
           <span>
-            <span className="block text-base font-extrabold leading-none tracking-tight text-fg">AdGen ERP</span>
+            <span className="block text-base font-extrabold leading-none tracking-tight text-fg">Singaji ERP</span>
             <span className="mt-1 block text-[11px] font-bold uppercase tracking-wider leading-none text-brand">
-              Pharmacy Management
+              Clinic &amp; Pharmacy Management
             </span>
           </span>
         </div>
@@ -176,7 +176,7 @@ export default function LoginPage() {
                 autoComplete="username"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                placeholder="e.g. owner@adgenpharmacy.com"
+                placeholder="e.g. owner@singajimediclinic.com"
               />
             </Field>
 
@@ -236,7 +236,7 @@ export default function LoginPage() {
 
       <footer className="border-t border-line bg-surface">
         <p className="mx-auto max-w-6xl px-6 py-4 text-center text-xs text-fg-subtle">
-          AdGen Pharmacy ERP · Billing, FEFO batch inventory &amp; GST compliance
+          Shri Singaji Mediclinic ERP · Billing, FEFO batch inventory &amp; GST compliance
         </p>
       </footer>
 
@@ -274,7 +274,7 @@ export default function LoginPage() {
               required
               value={reqEmail}
               onChange={(e) => setReqEmail(e.target.value)}
-              placeholder="staff@adgenpharmacy.com"
+              placeholder="staff@singajimediclinic.com"
             />
           </Field>
           <Field label="Choose a Password" required hint="At least 8 characters">
@@ -328,7 +328,7 @@ export default function LoginPage() {
               required
               value={forgotEmail}
               onChange={(e) => setForgotEmail(e.target.value)}
-              placeholder="you@adgenpharmacy.com"
+              placeholder="you@singajimediclinic.com"
             />
           </Field>
         </form>

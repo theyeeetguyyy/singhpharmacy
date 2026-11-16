@@ -16,7 +16,7 @@ export default function MobileHeader() {
       <Link href="/" className="flex items-center gap-2 min-w-0">
         <Image src="/logo.png" alt="" width={28} height={28} className="h-7 w-7 object-contain" />
         <span className="font-extrabold text-fg text-sm tracking-tight truncate">
-          AdGen <span className="text-brand font-mono text-[11px]">ERP</span>
+          Singaji <span className="text-brand font-mono text-[11px]">ERP</span>
         </span>
       </Link>
 

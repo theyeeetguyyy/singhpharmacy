@@ -257,7 +257,7 @@ export default function CommandPalette() {
         </div>
 
         <div className="flex items-center justify-between px-4 py-2.5 bg-raised border-t border-line text-[11px] text-fg-subtle font-medium">
-          <span>AdGen ERP · Global Search</span>
+          <span>Singaji ERP · Global Search</span>
           <span className="flex items-center gap-2">
             <kbd className="font-mono font-bold">↑↓</kbd> navigate
             <kbd className="font-mono font-bold">↵</kbd> open

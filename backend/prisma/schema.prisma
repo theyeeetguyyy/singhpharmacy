@@ -51,19 +51,19 @@ enum LedgerTransactionType {
 /// rather than hardcoded in the UI (they were, including a placeholder GSTIN).
 model PharmacyProfile {
   id            String   @id @default("default")
-  name          String   @default("AdGen Pharma")
+  name          String   @default("Shri Singaji mediclinic")
   tagline       String?
-  addressLine   String?
-  city          String?
-  state         String?
-  pincode       String?
-  phone         String?
+  addressLine   String?  @default("78, Main Rd, Sector A, Slice 2, Aranya Nagar, Scheme 78, Vijay Nagar")
+  city          String?  @default("Indore")
+  state         String?  @default("Madhya Pradesh")
+  pincode       String?  @default("452010")
+  phone         String?  @default("098262 68222")
   email         String?
   /// Printed on GST tax invoices — legally required to be the real GSTIN.
   gstNumber     String?
   /// Drug licence number, required on a pharmacy invoice in India.
   dlNumber      String?
-  invoiceFooter String?
+  invoiceFooter String?  @default("Thank you for choosing Shri Singaji mediclinic!")
   createdAt     DateTime @default(now())
   updatedAt     DateTime @updatedAt
 
